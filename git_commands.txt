@@ -1,0 +1,148 @@
+GIT COMMANDS USED IN THIS ASSIGNMENT
+Project    : git-workflow-login-testcases
+Repository : https://github.com/Krishna3451/git-workflow-login-testcases
+Author     : Krishna Faujdar (GitHub: Krishna3451)
+
+Commands are listed in the order they were executed. Repeated commands are kept.
+Lines marked 'Shell:' or 'GitHub CLI:' are not Git commands; they are included for context.
+The GITHUB section was run immediately after this file was committed.
+
+
+======================================================================
+STEP 1 - LOCAL REPOSITORY SETUP
+======================================================================
+01. mkdir git-workflow-login-testcases
+    Shell: create the project folder on the local machine.
+02. ls -1
+    Shell: list the two HTML files that exist before Git is initialised.
+03. git init -b main
+    Initialise a new local Git repository whose first branch is named
+    main.
+04. git remote -v
+    List configured remotes; empty output proves no GitHub repository is
+    connected yet.
+05. git status --short
+    Show the working-tree state; '??' marks the two untracked HTML files.
+
+======================================================================
+STEP 2 - INITIAL COMMIT
+======================================================================
+06. git add index.html about.html
+    Stage both HTML files for the first commit.
+07. git commit -m "Initial commit: add index and about pages"
+    Record the initial state of the project as the first commit.
+
+======================================================================
+STEP 2 - SECOND COMMIT
+======================================================================
+08. git diff -- index.html
+    Show the unstaged line-by-line change made to index.html.
+09. git add index.html
+    Stage the modified index.html.
+10. git commit -m "Update index page with skills section"
+    Create the second commit containing the index.html change.
+11. git log --oneline
+    Show the two commits on main in short form.
+
+======================================================================
+STEP 2 - BRANCHING AND MERGING
+======================================================================
+12. git branch feature
+    Create a new branch called feature pointing at the current commit.
+13. git switch feature
+    Switch the working tree to the feature branch.
+14. git branch
+    List local branches; '*' marks the current branch (feature).
+15. git add about.html
+    Stage the change made to about.html on the feature branch.
+16. git commit -m "Add contact section to about page"
+    Commit the about.html change on the feature branch only.
+17. git switch main
+    Switch back to the main branch.
+18. git merge --no-ff feature -m "Merge branch 'feature' into main"
+    Merge feature into main; --no-ff forces a merge commit so the branch
+    stays visible in history.
+19. git log --graph --oneline --decorate --all
+    Display the commit graph of all branches, showing the feature branch
+    joining main.
+
+======================================================================
+STEP 3 - .GITIGNORE
+======================================================================
+20. cat .gitignore
+    Shell: print the ignore rules (*.log and temp/).
+21. git status --short --ignored
+    Show untracked and ignored files; '!!' marks paths Git ignores.
+22. git check-ignore -v debug.log temp/notes.txt
+    Report which .gitignore rule matches each sample path.
+23. git add .gitignore
+    Stage the .gitignore file (the ignored samples are not staged).
+24. git commit -m "Add .gitignore for log files and temp folder"
+    Commit the ignore rules to the repository.
+
+======================================================================
+STEP 4 - ADDITIONAL COMMIT
+======================================================================
+25. git add index.html
+    Stage an extra footer line added only to demonstrate undo.
+26. git commit -m "Add temporary footer note"
+    Make the additional commit that will be undone.
+27. git log --oneline -3
+    Show that the temporary commit is now the latest commit (HEAD).
+
+======================================================================
+STEP 4 - UNDO WITH GIT REVERT
+======================================================================
+28. git revert --no-edit HEAD
+    Undo the last commit by creating a new commit that applies the exact
+    inverse change.
+29. git show --format='%h %s' HEAD -- index.html
+    Show the revert commit and the removed footer line.
+30. git diff HEAD~2 HEAD -- index.html
+    Compare index.html before the temporary commit with now; empty output
+    means it is fully restored.
+31. git log --oneline -4
+    Show both the temporary commit and its revert in history.
+32. git status --short
+    Confirm the working tree is clean after the undo.
+
+======================================================================
+STEP 6 - DOCUMENTATION AND HISTORY
+======================================================================
+33. git add README.md git_commands.txt
+    Stage the README and this command documentation file.
+34. git commit -m "Add README and git_commands.txt documentation"
+    Commit the documentation files.
+35. git log --graph --oneline --decorate --all
+    Display the complete commit history of all branches.
+36. git ls-files
+    List tracked files; debug.log and temp/ are absent because they are
+    ignored.
+
+======================================================================
+STEP 5 - GITHUB INTEGRATION
+======================================================================
+37. gh repo create Krishna3451/git-workflow-login-testcases --public --description "Git workflow assignment: commits, branching, merge, .gitignore and revert"
+    GitHub CLI: create an empty public repository on GitHub (done only
+    after the local work).
+38. git remote add origin https://github.com/Krishna3451/git-workflow-login-testcases.git
+    Connect the local repository to the GitHub repository under the name
+    origin.
+39. git remote -v
+    Verify the fetch and push URLs of origin.
+40. git push -u origin main feature
+    Upload main and feature with all their commits and set main to track
+    origin/main.
+41. git ls-remote --heads origin
+    List branch tips on GitHub to confirm they match the local branches.
+42. git status --short --branch
+    Confirm main is up to date with origin/main and nothing is pending.
+
+======================================================================
+NOTES
+======================================================================
+- git revert was chosen to undo the last commit because it keeps history
+  intact, which is safe once commits are shared on GitHub. (git reset --hard
+  HEAD~1 would delete the commit instead and rewrite history.)
+- --no-ff keeps an explicit merge commit so branch activity stays visible.
+- *.log ignores log files in any folder; temp/ ignores the whole folder.
